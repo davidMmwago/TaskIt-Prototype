@@ -1,0 +1,1447 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="TaskIt clickable prototype - a campus task marketplace, one task followed from both sides. INFO4011A Group 3, Wits University.">
+<meta name="theme-color" content="#0E1014">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2315171C'/%3E%3Ctext y='68' x='50' text-anchor='middle' font-size='54' font-weight='800' font-family='system-ui,sans-serif' fill='%2317C964'%3ER%3C/text%3E%3C/svg%3E">
+<style>
+  /* matches the host skeleton this page was authored against */
+  :root {
+    color-scheme: light;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  body { margin: 0; font: 14px system-ui, sans-serif; background: #fafaf9; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>TaskIt Prototype</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+</head>
+<body>
+<style>
+  /* ---------- surround (theme-aware) ---------- */
+  :root {
+    --page: #E8EBEE;
+    --page-2: #FFFFFF;
+    --page-ink: #14171C;
+    --page-ink-2: #5B6572;
+    --page-ink-3: #808A96;
+    --page-rule: #D5DAE0;
+    --page-accent: #12A150;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --page: #0E1114;
+      --page-2: #171B20;
+      --page-ink: #E7EAEE;
+      --page-ink-2: #9BA5B2;
+      --page-ink-3: #7B8593;
+      --page-rule: #272D34;
+      --page-accent: #3ED37E;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #0E1114;
+    --page-2: #171B20;
+    --page-ink: #E7EAEE;
+    --page-ink-2: #9BA5B2;
+    --page-ink-3: #7B8593;
+    --page-rule: #272D34;
+    --page-accent: #3ED37E;
+  }
+
+  /* ---------- TaskIt app tokens (single committed look) ---------- */
+  .phone {
+    --bg: #F2F3F5;
+    --surface: #FFFFFF;
+    --ink: #15171C;
+    --ink-2: #8B9199;
+    --ink-3: #A5ABB3;
+    --grey: #E8EAEE;
+    --rule: #EDEFF1;
+    --mint: #DFF3E7;
+    --green: #17C964;
+    --green-d: #12A150;
+    --green-ink: #7E9086;
+    --dark: #15171C;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--page-ink);
+    font-family: 'Plus Jakarta Sans', -apple-system, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+
+  .app {
+    display: grid;
+    grid-template-columns: 390px minmax(260px, 360px);
+    gap: 44px;
+    justify-content: center;
+    align-items: start;
+    padding-inline: 20px;
+    padding-block: 36px 56px;
+  }
+  @media (max-width: 880px) {
+    .app { grid-template-columns: minmax(0, 390px); gap: 28px; justify-content: center; }
+  }
+
+  /* ---------- phone shell ---------- */
+  .phone {
+    width: 390px;
+    height: 844px;
+    max-width: 100%;
+    border-radius: 34px;
+    overflow: hidden;
+    position: relative;
+    background: var(--bg);
+    color: var(--ink);
+    box-shadow: 0 26px 54px -18px rgba(8, 12, 20, 0.40), 0 0 0 1px rgba(8, 12, 20, 0.10);
+  }
+  @media (max-width: 520px) {
+    .app { padding-inline: 0; padding-block: 0 40px; }
+    .phone { width: 100%; height: calc(100dvh - 40px); min-height: 540px; border-radius: 0; box-shadow: none; }
+    .panel-wrap { padding-inline: 20px; }
+  }
+
+  .screen { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--bg); }
+  .screen[hidden] { display: none !important; }
+  .body { flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; padding: 26px 20px 20px; -webkit-overflow-scrolling: touch; }
+  .foot { flex: 0 0 auto; padding: 12px 20px 22px; background: var(--bg); }
+
+  /* ---------- app typography ---------- */
+  .h1 { font-size: 27px; font-weight: 800; letter-spacing: -0.5px; margin: 0; }
+  .h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.4px; margin: 0; }
+  .h3 { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; margin: 0; }
+  .sec { font-size: 17px; font-weight: 800; letter-spacing: -0.2px; margin: 0; }
+  .sub { font-size: 14px; font-weight: 500; color: var(--ink-2); line-height: 1.5; margin: 0; }
+  .lab { font-size: 13px; font-weight: 600; margin: 0; }
+  .fine { font-size: 12px; font-weight: 500; color: var(--ink-2); line-height: 1.45; margin: 0; }
+
+  .row { display: flex; align-items: center; gap: 12px; }
+  .between { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .col { display: flex; flex-direction: column; }
+  .gap4 { gap: 4px; } .gap6 { gap: 6px; } .gap9 { gap: 9px; } .gap12 { gap: 12px; }
+  .gap16 { gap: 16px; } .gap20 { gap: 20px; }
+  .mt8 { margin-top: 8px; } .mt12 { margin-top: 12px; } .mt16 { margin-top: 16px; }
+  .mt20 { margin-top: 20px; } .mt24 { margin-top: 24px; }
+  .grow { flex: 1 1 auto; min-width: 0; }
+  .spacer { flex: 1 1 auto; min-height: 16px; }
+
+  .back { display: flex; align-items: center; gap: 12px; background: none; border: 0; padding: 0; cursor: pointer; color: inherit; font: inherit; }
+
+  /* ---------- app components ---------- */
+  .card { background: var(--surface); border-radius: 14px; padding: 15px 16px; }
+  .card-grey { background: var(--grey); border-radius: 14px; padding: 15px 16px; }
+  .card-mint { background: var(--mint); border-radius: 14px; padding: 15px 16px; }
+  .card-dark { background: var(--dark); border-radius: 16px; padding: 18px; color: #FFFFFF; }
+  .hair { height: 1px; background: var(--rule); }
+
+  .btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; min-height: 56px; border: 0; border-radius: 13px;
+    font-family: inherit; font-size: 15.5px; font-weight: 700;
+    cursor: pointer; transition: opacity .14s ease, transform .1s ease;
+  }
+  .btn:active { transform: scale(0.988); }
+  .btn-dark { background: var(--dark); color: #FFFFFF; }
+  .btn-green { background: var(--green); color: #07130C; }
+  .btn-ghost { background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 1px var(--rule); }
+  .btn:disabled { opacity: .42; cursor: not-allowed; }
+  .btn:focus-visible, .chip:focus-visible, .tile:focus-visible, .seg:focus-visible,
+  .tab:focus-visible, .sw:focus-visible, .star:focus-visible, .tile-entry:focus-visible,
+  .listcard:focus-visible, .back:focus-visible, .ctrl:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 2.5px solid var(--green-d); outline-offset: 2px;
+  }
+
+  .field {
+    width: 100%; min-height: 50px; background: var(--surface);
+    border: 0; border-radius: 12px; padding: 0 15px;
+    font-family: inherit; font-size: 14.5px; font-weight: 600; color: var(--ink);
+  }
+  .field::placeholder { color: var(--ink-3); font-weight: 500; }
+  select.field { appearance: none; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none'%3E%3Cpath d='M3.5 6L8 10.5L12.5 6' stroke='%238B9199' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 15px center; padding-right: 40px; }
+  select.field:invalid { color: var(--ink-3); font-weight: 500; }
+  .field-err { box-shadow: inset 0 0 0 1.6px #E5484D; }
+  .err { font-size: 12px; font-weight: 600; color: #C62A2F; margin: 0; }
+
+  .seg-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .seg { min-height: 50px; background: var(--surface); border: 1.6px solid transparent; border-radius: 12px;
+    font-family: inherit; font-size: 14.5px; font-weight: 600; color: var(--ink); cursor: pointer; }
+  .seg[aria-pressed="true"] { border-color: var(--green); }
+
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip { min-height: 46px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--surface);
+    font-family: inherit; font-size: 14px; font-weight: 700; color: #4A5057; cursor: pointer; flex: 1 1 auto; }
+  .chip[aria-pressed="true"] { background: var(--dark); color: #FFFFFF; }
+  .chip-sm { min-height: 38px; padding: 0 14px; font-size: 12.5px; font-weight: 600; flex: 0 0 auto; }
+
+  .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tile { display: flex; align-items: center; gap: 11px; min-height: 62px; padding: 0 14px;
+    background: var(--surface); border: 0; border-radius: 13px; cursor: pointer;
+    font-family: inherit; font-size: 13.5px; font-weight: 700; color: #4A5057; text-align: left; }
+  .tile[aria-pressed="true"] { background: var(--dark); color: #FFFFFF; }
+
+  .pill { display: inline-flex; align-items: center; gap: 4px; background: var(--mint);
+    border-radius: 999px; padding: 4px 10px; font-size: 11px; font-weight: 700; color: var(--green-d); }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--grey); flex-shrink: 0; }
+  .avatar-sm { width: 18px; height: 18px; border-radius: 50%; background: var(--grey); flex-shrink: 0; }
+  .avatar-lg { width: 56px; height: 56px; border-radius: 50%; background: var(--grey); flex-shrink: 0; }
+
+  .sw { width: 50px; height: 30px; border: 0; border-radius: 999px; background: #CBD0D6; padding: 3px;
+    display: flex; align-items: center; cursor: pointer; flex-shrink: 0; transition: background .16s ease; }
+  .sw i { width: 24px; height: 24px; border-radius: 50%; background: #FFFFFF; display: block;
+    transition: transform .16s ease; }
+  .sw[aria-checked="true"] { background: var(--green); }
+  .sw[aria-checked="true"] i { transform: translateX(20px); }
+
+  .tabbar { flex: 0 0 auto; background: var(--surface); border-top: 1px solid #E4E7EA;
+    padding: 11px 0 20px; display: grid; grid-template-columns: repeat(4, 1fr); }
+  .tab { display: flex; flex-direction: column; align-items: center; gap: 7px;
+    background: none; border: 0; padding: 4px 0; cursor: pointer; font-family: inherit; }
+  .tab s { width: 6px; height: 6px; border-radius: 50%; background: #CBD0D6; display: block; }
+  .tab span { font-size: 11px; font-weight: 500; color: var(--ink-2); }
+  .tab[aria-current="page"] s { background: var(--green); }
+  .tab[aria-current="page"] span { font-weight: 700; color: var(--ink); }
+
+  .listcard { display: flex; align-items: stretch; gap: 14px; width: 100%; text-align: left;
+    background: var(--surface); border: 0; border-radius: 14px; padding: 15px 16px;
+    font-family: inherit; cursor: pointer; color: var(--ink); }
+  .listcard .vline { width: 1px; background: var(--rule); flex-shrink: 0; }
+  .money { font-size: 15px; font-weight: 800; color: var(--green-d); white-space: nowrap; }
+
+  .step { display: flex; gap: 13px; align-items: flex-start; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; background: var(--grey); flex-shrink: 0; margin-top: 4px; }
+  .dot.on { background: var(--green); }
+
+  .stars { display: flex; gap: 8px; justify-content: center; }
+  .star { background: none; border: 0; padding: 2px; cursor: pointer; line-height: 0; }
+
+  .toast { position: absolute; left: 20px; right: 20px; bottom: 96px; background: var(--dark); color: #FFFFFF;
+    border-radius: 12px; padding: 13px 16px; font-size: 13.5px; font-weight: 600;
+    box-shadow: 0 12px 28px -10px rgba(0,0,0,.5); opacity: 0; transform: translateY(8px);
+    transition: opacity .2s ease, transform .2s ease; pointer-events: none; z-index: 20; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  .pulse { width: 9px; height: 9px; border-radius: 50%; background: var(--green); flex-shrink: 0;
+    animation: pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+
+  /* ---------- presenter panel ---------- */
+  .panel-wrap { display: flex; flex-direction: column; gap: 18px; }
+  .panel { background: var(--page-2); border: 1px solid var(--page-rule); border-radius: 12px; padding: 18px; }
+  .panel h2 { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--page-ink-3); margin: 0 0 12px; }
+  .panel p { font-size: 0.86rem; line-height: 1.55; color: var(--page-ink-2); margin: 0; }
+  .panel p + p { margin-top: 10px; }
+  .panel b { color: var(--page-ink); font-weight: 600; }
+  .who { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .ctrl { padding: 11px 12px; border-radius: 9px; border: 1px solid var(--page-rule);
+    background: transparent; color: var(--page-ink-2); font-family: inherit; font-size: 0.82rem;
+    font-weight: 600; cursor: pointer; text-align: center; line-height: 1.3; }
+  .ctrl[aria-pressed="true"] { background: var(--page-ink); color: var(--page); border-color: var(--page-ink); }
+  .ctrl-wide { grid-column: 1 / -1; }
+  .notes { font-size: 0.86rem; line-height: 1.55; color: var(--page-ink-2); }
+  .notes ul { margin: 0; padding-left: 18px; }
+  .notes li { margin-bottom: 8px; }
+  .notes li::marker { color: var(--page-ink-3); }
+  .notes strong { color: var(--page-ink); font-weight: 600; }
+  .flag { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: .05em;
+    text-transform: uppercase; color: var(--page-accent); }
+</style>
+
+<div class="app">
+
+  <div class="stage">
+    <div class="phone" id="phone">
+
+      <!-- ============ LANDING ============ -->
+      <section class="screen" data-screen="landing" style="background:#0E1014;color:#fff;" hidden>
+        <div class="body" style="background:#0E1014;display:flex;flex-direction:column;justify-content:center;">
+          <div class="h1" style="color:#fff;">Task it.</div>
+          <div style="font-size:31px;font-weight:800;letter-spacing:-0.8px;line-height:1.14;color:#17C964;margin-top:14px;">Your campus.<br>Your tasks.<br>Your money.</div>
+          <p class="sub" style="color:#8A9199;margin-top:18px;">Get small campus tasks done by verified students &mdash; or earn between lectures.</p>
+        </div>
+        <div class="foot" style="background:#0E1014;">
+          <div class="col gap12">
+            <button class="btn btn-green" data-go="signup">Create account</button>
+            <button class="btn" style="background:transparent;color:#fff;box-shadow:inset 0 0 0 1px #2A2E36;" data-go="home">Log in</button>
+            <p class="fine" style="text-align:center;color:#6C737C;">Open to verified students at Wits and UJ.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ CREATE ACCOUNT ============ -->
+      <section class="screen" data-screen="signup" hidden>
+        <div class="body">
+          <button class="back" data-go="landing" aria-label="Back">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M10 3.5L5.5 8L10 12.5" stroke="#15171C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="h2">Create account</span>
+          </button>
+          <p class="sub mt12">One account. Post tasks when you are busy, earn when you are free.</p>
+
+          <div class="col gap9 mt20">
+            <label class="lab" for="su-name">Full name</label>
+            <input class="field" id="su-name" type="text" placeholder="Thabo Nkosi" autocomplete="name">
+          </div>
+
+          <div class="col gap9 mt20">
+            <label class="lab" for="su-email">University email</label>
+            <input class="field" id="su-email" type="email" placeholder="thabo@students.wits.ac.za" autocomplete="email" inputmode="email">
+            <p class="fine" id="su-hint">We verify every account against a university email address. This is how other students know you are real.</p>
+          </div>
+
+          <div class="col gap9 mt20">
+            <label class="lab" for="su-campus">Campus</label>
+            <select class="field" id="su-campus">
+              <option>Wits University &bull; Braamfontein</option>
+              <option>Wits University &bull; Education Campus</option>
+              <option>University of Johannesburg &bull; Auckland Park</option>
+            </select>
+          </div>
+
+          <div class="col gap9 mt20">
+            <label class="lab" for="su-pass">Password</label>
+            <input class="field" id="su-pass" type="password" placeholder="At least 8 characters" autocomplete="new-password">
+          </div>
+          <div class="spacer"></div>
+        </div>
+        <div class="foot">
+          <button class="btn btn-dark" id="su-submit">Send verification link</button>
+          <p class="fine mt12" style="text-align:center;">Already have an account? <b style="color:var(--green-d);">Log in</b></p>
+        </div>
+      </section>
+
+      <!-- ============ VERIFY ============ -->
+      <section class="screen" data-screen="verify" hidden>
+        <div class="body" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+          <div style="width:74px;height:74px;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M4 12.8l5 5L20 6.6" stroke="#12A150" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="h2 mt20">Email verified</div>
+          <p class="sub mt12" style="max-width:270px;"><span id="vf-email">your university email</span> is confirmed. A verified badge now shows on your profile.</p>
+          <div class="card-mint mt24" style="text-align:left;">
+            <p class="fine" style="color:var(--green-ink);"><b style="color:var(--ink);">Demo shortcut.</b> The real app waits for you to click a link in your inbox. Here it is confirmed instantly.</p>
+          </div>
+        </div>
+        <div class="foot">
+          <button class="btn btn-dark" data-go="home">Continue to TaskIt</button>
+        </div>
+      </section>
+
+      <!-- ============ HOME (post-test hybrid) ============ -->
+      <section class="screen" data-screen="home" hidden>
+        <div class="body">
+          <div class="between">
+            <div class="h1">Task it.</div>
+            <button class="back" data-go="profile" aria-label="Profile"><span class="avatar" style="width:38px;height:38px;"></span></button>
+          </div>
+
+          <div class="card-grey mt16" style="padding:13px 16px;">
+            <div class="between">
+              <div class="col gap4">
+                <span class="fine">Current campus</span>
+                <span style="font-size:15px;font-weight:600;" id="hm-campus">Wits University &bull; Braamfontein</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 6L8 10.5L12.5 6" stroke="#8B9199" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+
+          <div class="h3 mt24">What do you need done?</div>
+
+          <div class="mt12" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <button class="tile-entry" data-go="request" style="background:#15171C;border:0;border-radius:16px;padding:16px;height:124px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;text-align:left;font-family:inherit;">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="#FFFFFF" stroke-width="1.9" stroke-linecap="round"/></svg>
+              <span class="col gap6">
+                <span style="font-size:15px;font-weight:700;color:#fff;">Request a task</span>
+                <span style="font-size:12px;font-weight:500;color:#9AA1A9;line-height:1.35;">Get quick help on campus</span>
+              </span>
+            </button>
+            <button class="tile-entry" data-go="find" style="background:#DFF3E7;border:0;border-radius:16px;padding:16px;height:124px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;text-align:left;font-family:inherit;">
+              <span style="font-size:19px;font-weight:800;color:#12A150;line-height:1;">R</span>
+              <span class="col gap6">
+                <span style="font-size:15px;font-weight:700;color:#15171C;">Earn on campus</span>
+                <span style="font-size:12px;font-weight:500;color:#7E9086;line-height:1.35;">Find nearby tasks</span>
+              </span>
+            </button>
+          </div>
+
+          <!-- escrow message, moved earlier in the flow (decision 3) -->
+          <div class="row mt12" style="gap:9px;padding:0 2px;">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;"><rect x="3" y="7" width="10" height="7" rx="2" stroke="#12A150" stroke-width="1.5"/><path d="M5.6 7V5.3a2.4 2.4 0 014.8 0V7" stroke="#12A150" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span style="font-size:12px;font-weight:600;color:var(--green-d);line-height:1.4;">Payments are held by TaskIt until you confirm the task is done.</span>
+          </div>
+
+          <!-- B's live task list in A's layout (decision 1) -->
+          <div class="between mt24">
+            <div class="row" style="gap:8px;"><span class="pulse"></span><span class="sec">Happening near you</span></div>
+            <button class="back" data-go="find" style="font-size:13px;font-weight:600;color:var(--green-d);">See all</button>
+          </div>
+          <div class="col gap9 mt12" id="hm-list"></div>
+
+          <div class="sec mt24">Your activity</div>
+          <div class="mt12" id="hm-activity"></div>
+          <div class="spacer"></div>
+        </div>
+        <nav class="tabbar" data-tabs="home"></nav>
+      </section>
+
+      <!-- ============ REQUEST A TASK (Version B) ============ -->
+      <section class="screen" data-screen="request" hidden>
+        <div class="body">
+          <button class="back" data-go="home" aria-label="Back">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M10 3.5L5.5 8L10 12.5" stroke="#15171C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="h2">Request a task</span>
+          </button>
+          <p class="sub mt12">Start with what kind of help you need.</p>
+
+          <p class="lab mt20">Task type</p>
+          <div class="tiles mt8" id="rq-types">
+            <button class="tile" data-type="parcel" aria-pressed="true">
+              <svg width="21" height="21" viewBox="0 0 22 22" fill="none"><path d="M11 2.6l7.4 4v8.8L11 19.4 3.6 15.4V6.6L11 2.6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3.6 6.6L11 10.6l7.4-4M11 10.6v8.8" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+              <span>Parcel pickup</span>
+            </button>
+            <button class="tile" data-type="printing" aria-pressed="false">
+              <svg width="21" height="21" viewBox="0 0 22 22" fill="none"><path d="M6.2 8.2V3.2h9.6v5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><rect x="3.2" y="8.2" width="15.6" height="6.6" rx="1.6" stroke="currentColor" stroke-width="1.6"/><path d="M6.2 12.6h9.6v6.2H6.2v-6.2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+              <span>Printing</span>
+            </button>
+            <button class="tile" data-type="food" aria-pressed="false">
+              <svg width="21" height="21" viewBox="0 0 22 22" fill="none"><path d="M5 4.4h12l-1 13.2a1.9 1.9 0 01-1.9 1.7H7.9A1.9 1.9 0 016 17.6L5 4.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M5.4 9.4h11.2" stroke="currentColor" stroke-width="1.6"/></svg>
+              <span>Food</span>
+            </button>
+            <button class="tile" data-type="other" aria-pressed="false">
+              <svg width="21" height="21" viewBox="0 0 22 22" fill="none"><circle cx="6" cy="11" r="1.6" fill="currentColor"/><circle cx="11" cy="11" r="1.6" fill="currentColor"/><circle cx="16" cy="11" r="1.6" fill="currentColor"/></svg>
+              <span>Other</span>
+            </button>
+          </div>
+
+          <div class="col gap9 mt20">
+            <label class="lab" for="rq-title">What do you need?</label>
+            <input class="field" id="rq-title" type="text" placeholder="e.g. Collect my Takealot parcel">
+            <p class="err" id="rq-title-err" hidden>Tell the student what the task is.</p>
+          </div>
+
+          <p class="lab mt20">Route</p>
+          <div class="card mt8" style="padding:15px;display:flex;gap:13px;">
+            <div class="col" style="align-items:center;padding-top:6px;">
+              <span style="width:9px;height:9px;border-radius:50%;background:var(--green);"></span>
+              <span style="width:1.5px;flex:1 1 auto;min-height:30px;background:#DFE2E6;"></span>
+              <span style="width:9px;height:9px;border-radius:50%;border:2px solid #C2C7CD;"></span>
+            </div>
+            <div class="grow col gap12">
+              <div class="col gap4">
+                <label class="fine" style="font-weight:600;" for="rq-from">Collect from</label>
+                <select class="field" id="rq-from" style="min-height:34px;padding:0;background:none;">
+                  <option>Wits University &bull; Matrix</option>
+                  <option>Wits University &bull; Wartenweiler Library</option>
+                  <option>Wits University &bull; Main Dining Hall</option>
+                  <option>Braamfontein &bull; Post Office</option>
+                </select>
+              </div>
+              <div class="hair"></div>
+              <div class="col gap4">
+                <label class="fine" style="font-weight:600;" for="rq-to">Deliver to</label>
+                <select class="field" id="rq-to" style="min-height:34px;padding:0;background:none;" required>
+                  <option value="" selected disabled>Choose campus location</option>
+                  <option value="Wits &bull; Jubilee Hall">Wits &bull; Jubilee Hall</option>
+                  <option value="Wits &bull; Solomon Mahlangu House">Wits &bull; Solomon Mahlangu House</option>
+                  <option value="Wits &bull; FNB Building">Wits &bull; FNB Building</option>
+                  <option value="Wits &bull; Barnato Hall">Wits &bull; Barnato Hall</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <p class="err mt8" id="rq-to-err" hidden>Choose where it should go.</p>
+
+          <p class="lab mt20">When do you need it?</p>
+          <div class="seg-wrap mt8" id="rq-when">
+            <button class="seg" data-when="asap" aria-pressed="true">ASAP</button>
+            <button class="seg" data-when="later" aria-pressed="false">Set a time</button>
+          </div>
+          <select class="field mt12" id="rq-time" hidden>
+            <option>In 30 minutes</option>
+            <option>In 1 hour</option>
+            <option>Today, 14:00</option>
+            <option>Tomorrow morning</option>
+          </select>
+
+          <!-- presets relabelled so they cannot read as a tip (decision 2) -->
+          <div class="between mt20" style="align-items:baseline;">
+            <span class="lab">Offer</span>
+            <span class="fine">What the student gets paid</span>
+          </div>
+          <div class="chips mt8" id="rq-offer">
+            <button class="chip" data-offer="15" aria-pressed="false">R15</button>
+            <button class="chip" data-offer="20" aria-pressed="true">R20</button>
+            <button class="chip" data-offer="25" aria-pressed="false">R25</button>
+            <button class="chip" data-offer="30" aria-pressed="false">R30</button>
+            <button class="chip" data-offer="custom" aria-pressed="false">Other</button>
+          </div>
+          <input class="field mt12" id="rq-custom" type="number" min="5" max="500" step="5" placeholder="Enter an amount in rand" hidden>
+          <p class="fine mt8" id="rq-typical">TaskIt adds no fee on micro-tasks &mdash; the student receives the full R20. Most parcel tasks pay R20.</p>
+          <div class="spacer"></div>
+        </div>
+        <div class="foot">
+          <button class="btn btn-dark" id="rq-next">Review task request</button>
+        </div>
+      </section>
+
+      <!-- ============ REVIEW & CONFIRM (Version A) ============ -->
+      <section class="screen" data-screen="review" hidden>
+        <div class="body">
+          <button class="back" data-go="request" aria-label="Back">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M10 3.5L5.5 8L10 12.5" stroke="#15171C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="h2">Review &amp; confirm</span>
+          </button>
+
+          <div class="card mt20" style="padding:16px;">
+            <div class="col gap12">
+              <div><span class="pill" id="rv-type">Parcel pickup</span></div>
+              <div style="font-size:17px;font-weight:700;letter-spacing:-0.2px;" id="rv-title">Collect my Takealot parcel</div>
+              <div class="hair"></div>
+              <div class="col gap12">
+                <div class="between"><span class="sub" style="font-size:13.5px;">From</span><span style="font-size:13.5px;font-weight:700;" id="rv-from">Wits &bull; Matrix</span></div>
+                <div class="between"><span class="sub" style="font-size:13.5px;">To</span><span style="font-size:13.5px;font-weight:700;" id="rv-to">Wits &bull; Jubilee Hall</span></div>
+                <div class="between"><span class="sub" style="font-size:13.5px;">When</span><span style="font-size:13.5px;font-weight:700;" id="rv-when">ASAP</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mt12" style="padding:16px;">
+            <div class="col gap12">
+              <div style="font-size:15.5px;font-weight:800;">Payment</div>
+              <div class="between"><span class="sub" style="font-size:13.5px;">Your offer</span><span style="font-size:13.5px;font-weight:600;" id="rv-offer">R 20.00</span></div>
+              <div class="between"><span class="sub" style="font-size:13.5px;">TaskIt fee (micro-task)</span><span style="font-size:13.5px;font-weight:600;">R 0.00</span></div>
+              <div class="hair"></div>
+              <div class="between"><span style="font-size:14px;font-weight:700;">Total held</span><span style="font-size:17px;font-weight:800;" id="rv-total">R 20.00</span></div>
+            </div>
+          </div>
+
+          <div class="card-mint mt12" style="display:flex;gap:11px;">
+            <svg width="19" height="19" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px;"><rect x="3" y="7" width="10" height="7" rx="2" stroke="#12A150" stroke-width="1.5"/><path d="M5.6 7V5.3a2.4 2.4 0 014.8 0V7" stroke="#12A150" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <div class="col gap6">
+              <span style="font-size:14px;font-weight:700;">Your money is held, not sent</span>
+              <span class="fine" style="color:var(--green-ink);"><span id="rv-hold">R20</span> is held by TaskIt and only released to the student once you confirm the task is done.</span>
+            </div>
+          </div>
+
+          <p class="lab mt20">Pay with</p>
+          <div class="seg-wrap mt8" id="rv-pay">
+            <button class="seg" data-pay="eft" aria-pressed="true">Instant EFT</button>
+            <button class="seg" data-pay="payshap" aria-pressed="false">PayShap</button>
+          </div>
+          <div class="spacer"></div>
+        </div>
+        <div class="foot">
+          <button class="btn btn-dark" id="rv-post">Hold <span id="rv-btn-amt">R20</span> &amp; post task</button>
+        </div>
+      </section>
+
+      <!-- ============ POSTED (poster waiting) ============ -->
+      <section class="screen" data-screen="posted" hidden>
+        <div class="body">
+          <div class="h2">Task posted</div>
+          <p class="sub mt12">Verified students near you can see it now.</p>
+
+          <div class="card mt20">
+            <div class="col gap9">
+              <div><span class="pill" id="po-type">Parcel pickup</span></div>
+              <div style="font-size:16px;font-weight:700;" id="po-title">Collect my Takealot parcel</div>
+              <div class="fine" id="po-route">Matrix &rarr; Jubilee Hall &bull; ASAP</div>
+            </div>
+          </div>
+
+          <div class="card-mint mt12">
+            <div class="row" style="gap:10px;">
+              <span class="pulse"></span>
+              <div class="col gap4 grow">
+                <span style="font-size:14px;font-weight:700;"><span id="po-amt">R20</span> held &middot; waiting for a student</span>
+                <span class="fine" style="color:var(--green-ink);">The money has left your account and sits with TaskIt. Nobody has been paid.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-grey mt12">
+            <p class="fine"><b style="color:var(--ink);">Follow the task from the other side.</b> In the real app, nearby students get a push notification. For this demo, switch to <b style="color:var(--ink);">Mbali K.</b> in the <b style="color:var(--ink);">Viewing as</b> control and accept the task you just posted.</p>
+          </div>
+          <div class="spacer"></div>
+        </div>
+        <nav class="tabbar" data-tabs="activity"></nav>
+      </section>
+
+      <!-- ============ FIND TASKS (post-test hybrid) ============ -->
+      <section class="screen" data-screen="find" hidden>
+        <div class="body">
+          <button class="back" data-go="home" aria-label="Back">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M10 3.5L5.5 8L10 12.5" stroke="#15171C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="h2">Find tasks</span>
+          </button>
+
+          <!-- B's availability switch (decision 4) -->
+          <div class="card mt16" style="padding:14px 16px;">
+            <div class="row" style="gap:14px;">
+              <div class="grow col gap4">
+                <div class="row" style="gap:8px;">
+                  <span style="width:8px;height:8px;border-radius:50%;background:var(--green);" id="fd-dot"></span>
+                  <span style="font-size:14.5px;font-weight:700;">Available for tasks</span>
+                </div>
+                <span class="fine" id="fd-availsub">6 nearby &bull; switch off to mute alerts</span>
+              </div>
+              <button class="sw" id="fd-switch" role="switch" aria-checked="true" aria-label="Available for tasks"><i></i></button>
+            </div>
+          </div>
+
+          <div class="mt16" style="background:var(--grey);border-radius:999px;padding:4px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;" id="fd-tabs">
+            <button class="chip chip-sm" data-ftab="available" aria-pressed="true" style="flex:1 1 auto;background:#fff;">Available</button>
+            <button class="chip chip-sm" data-ftab="accepted" aria-pressed="false" style="flex:1 1 auto;background:transparent;">Accepted</button>
+            <button class="chip chip-sm" data-ftab="completed" aria-pressed="false" style="flex:1 1 auto;background:transparent;">Completed</button>
+          </div>
+
+          <!-- B's sort chips (decision 4) -->
+          <div class="row mt16" style="gap:8px;" id="fd-sort">
+            <span class="fine" style="font-weight:600;">Sort</span>
+            <button class="chip chip-sm" data-sort="closest" aria-pressed="true">Closest</button>
+            <button class="chip chip-sm" data-sort="pay" aria-pressed="false">Highest pay</button>
+            <button class="chip chip-sm" data-sort="new" aria-pressed="false">Newest</button>
+          </div>
+
+          <div class="col gap12 mt16" id="fd-list"></div>
+          <div class="spacer"></div>
+        </div>
+        <nav class="tabbar" data-tabs="tasks"></nav>
+      </section>
+
+      <!-- ============ TASK DETAIL (earner) ============ -->
+      <section class="screen" data-screen="detail" hidden>
+        <div class="body">
+          <button class="back" data-go="find" aria-label="Back">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M10 3.5L5.5 8L10 12.5" stroke="#15171C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="h2">Task detail</span>
+          </button>
+
+          <div class="mt16"><span class="pill" id="dt-type">Parcel pickup</span></div>
+          <div class="h2 mt12" id="dt-title">Collect my Takealot parcel</div>
+
+          <div class="card mt16">
+            <div class="row">
+              <span class="avatar" style="width:44px;height:44px;"></span>
+              <div class="grow col gap4">
+                <span style="font-size:15px;font-weight:700;" id="dt-poster">Thabo N.</span>
+                <span class="fine" id="dt-postermeta">4.9 &middot; 12 tasks posted</span>
+              </div>
+              <span class="pill">
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.3l2.2 2.2 4.8-5" stroke="#12A150" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Verified
+              </span>
+            </div>
+          </div>
+
+          <div class="card mt12">
+            <div class="col gap12">
+              <div class="between"><span class="sub" style="font-size:13.5px;">Collect from</span><span style="font-size:13.5px;font-weight:700;" id="dt-from">Wits &bull; Matrix</span></div>
+              <div class="between"><span class="sub" style="font-size:13.5px;">Deliver to</span><span style="font-size:13.5px;font-weight:700;" id="dt-to">Wits &bull; Jubilee Hall</span></div>
+              <div class="between"><span class="sub" style="font-size:13.5px;">Needed by</span><span style="font-size:13.5px;font-weight:700;" id="dt-when">ASAP &middot; today</span></div>
+              <div class="between"><span class="sub" style="font-size:13.5px;">Distance</span><span style="font-size:13.5px;font-weight:700;" id="dt-walk">8 min walk</span></div>
+            </div>
+          </div>
+
+          <div class="card-mint mt12">
+            <div class="col gap6">
+              <span style="font-size:14px;font-weight:700;"><span id="dt-amt">R20</span> is already held for this task</span>
+              <span class="fine" style="color:var(--green-ink);">You will be paid as soon as the poster confirms.</span>
+            </div>
+          </div>
+          <div class="spacer"></div>
+        </div>
+        <div class="foot">
+          <div class="row" style="gap:12px;">
+            <button class="btn btn-ghost" data-go="find" style="flex:1 1 40%;">Decline</button>
+            <button class="btn btn-dark" id="dt-accept" style="flex:1 1 60%;">Accept task</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ IN PROGRESS (earner) ============ -->
+      <section class="screen" data-screen="working" hidden>
+        <div class="body">
+          <div class="h2">Task in progress</div>
+          <div style="font-size:16px;font-weight:700;margin-top:10px;" id="wk-title">Collect my Takealot parcel</div>
+
+          <div class="card mt16">
+            <div class="row">
+              <span class="avatar"></span>
+              <div class="grow col gap4">
+                <span style="font-size:15px;font-weight:700;">Thabo N. <span class="fine" style="font-weight:600;color:var(--green-d);">&check; Verified</span></span>
+                <span class="fine">4.9 &middot; 12 tasks posted</span>
+              </div>
+              <button class="chip chip-sm" style="flex:0 0 auto;background:var(--grey);" id="wk-chat">Chat</button>
+            </div>
+          </div>
+
+          <div class="card mt12" id="wk-steps"></div>
+
+          <div class="card-mint mt12">
+            <div class="col gap6">
+              <span style="font-size:14px;font-weight:700;"><span id="wk-amt">R20</span> held for you</span>
+              <span class="fine" style="color:var(--green-ink);" id="wk-money">Released to your payout account the moment Thabo confirms delivery.</span>
+            </div>
+          </div>
+          <div class="spacer"></div>
+        </div>
+        <div class="foot">
+          <button class="btn btn-dark" id="wk-advance">I&rsquo;m on my way</button>
+        </div>
+      </section>
+
+      <!-- ============ IN PROGRESS (poster) ============ -->
+      <section class="screen" data-screen="tracking" hidden>
+        <div class="body">
+          <div class="h2">Task in progress</div>
+          <div style="font-size:16px;font-weight:700;margin-top:10px;" id="tk-title">Collect my Takealot parcel</div>
+
+          <div class="card mt16">
+            <div class="row">
+              <span class="avatar"></span>
+              <div class="grow col gap4">
+                <span style="font-size:15px;font-weight:700;">Mbali K. <span class="fine" style="font-weight:600;color:var(--green-d);">&check; Verified</span></span>
+                <span class="fine">4.8 &middot; 34 tasks completed</span>
+              </div>
+              <button class="chip chip-sm" style="flex:0 0 auto;background:var(--grey);" id="tk-chat">Chat</button>
+            </div>
+          </div>
+
+          <div class="card mt12" id="tk-steps"></div>
+
+          <div class="card-mint mt12">
+            <div class="col gap6">
+              <span style="font-size:14px;font-weight:700;"><span id="tk-amt">R20</span> held &middot; not yet released</span>
+              <span class="fine" style="color:var(--green-ink);">Only you can release this payment, once the parcel is in your hands.</span>
+            </div>
+          </div>
+          <div class="spacer"></div>
+        </div>
+        <div class="foot">
+          <div class="col gap12">
+            <button class="btn btn-dark" id="tk-release">Confirm delivery &amp; release <span id="tk-btn-amt">R20</span></button>
+            <p class="fine" id="tk-hint" style="text-align:center;">Available once Mbali marks the parcel delivered.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ RELEASED + RATE ============ -->
+      <section class="screen" data-screen="released" hidden>
+        <div class="body" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+          <div style="width:80px;height:80px;border-radius:50%;background:var(--green);"></div>
+          <div class="h2 mt20">Payment released</div>
+          <p class="sub mt12"><span id="rl-amt">R20.00</span> has been sent to Mbali K.</p>
+
+          <div class="card mt24" style="width:100%;text-align:center;padding:20px 16px;">
+            <div style="font-size:15.5px;font-weight:700;">How did Mbali do?</div>
+            <div class="stars mt16" id="rl-stars"></div>
+            <p class="fine mt16">Ratings are how the next student knows they can trust you.</p>
+          </div>
+          <div class="spacer"></div>
+        </div>
+        <div class="foot">
+          <div class="col gap12">
+            <button class="btn btn-dark" id="rl-submit" disabled>Submit rating</button>
+            <button class="btn btn-ghost" id="rl-skip">Skip</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ACTIVITY ============ -->
+      <section class="screen" data-screen="activity" hidden>
+        <div class="body">
+          <div class="h2">Activity</div>
+          <div class="mt20" id="ac-body"></div>
+          <div class="spacer"></div>
+        </div>
+        <nav class="tabbar" data-tabs="activity"></nav>
+      </section>
+
+      <!-- ============ PROFILE ============ -->
+      <section class="screen" data-screen="profile" hidden>
+        <div class="body">
+          <div class="h2">Profile</div>
+
+          <div class="card mt16">
+            <div class="row" style="gap:14px;">
+              <span class="avatar-lg"></span>
+              <div class="grow col gap6">
+                <span style="font-size:17px;font-weight:700;" id="pf-name">Mbali Khumalo</span>
+                <span class="fine" id="pf-meta">4.8 &middot; 34 tasks completed</span>
+                <span class="pill">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.3l2.2 2.2 4.8-5" stroke="#12A150" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span id="pf-verified">Wits email verified</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mt12">
+            <div class="row" style="gap:14px;">
+              <div class="grow col gap4">
+                <span style="font-size:15px;font-weight:700;">Available for tasks</span>
+                <span class="fine" id="pf-availsub" style="color:var(--green-d);font-weight:600;">On &ndash; you will get task alerts</span>
+              </div>
+              <button class="sw" id="pf-switch" role="switch" aria-checked="true" aria-label="Available for tasks"><i></i></button>
+            </div>
+            <p class="fine mt12">Turn this off during lectures and tests. You will stop receiving task notifications until you switch it back on.</p>
+          </div>
+
+          <div class="mt12" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="card">
+              <div style="font-size:21px;font-weight:800;letter-spacing:-0.5px;" id="pf-earned">R 780</div>
+              <div class="fine mt8">Earned this month</div>
+            </div>
+            <div class="card">
+              <div style="font-size:21px;font-weight:800;letter-spacing:-0.5px;" id="pf-pending">R 40</div>
+              <div class="fine mt8">Pending release</div>
+            </div>
+          </div>
+
+          <div class="card mt12" style="padding:0;">
+            <div id="pf-menu"></div>
+          </div>
+          <div class="spacer"></div>
+        </div>
+        <nav class="tabbar" data-tabs="profile"></nav>
+      </section>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div class="panel-wrap">
+    <div class="panel">
+      <h2>Viewing as</h2>
+      <div class="who">
+        <button class="ctrl" id="as-poster" aria-pressed="true">Thabo N.<br><span style="font-weight:500;opacity:.75;">the poster</span></button>
+        <button class="ctrl" id="as-earner" aria-pressed="false">Mbali K.<br><span style="font-weight:500;opacity:.75;">the earner</span></button>
+        <button class="ctrl ctrl-wide" id="as-reset">Restart the demo</button>
+      </div>
+      <p style="margin-top:12px;">One account both posts and completes tasks, so this switch stands in for handing the phone to the other student. The task you post appears in Mbali&rsquo;s list with the details you typed.</p>
+    </div>
+
+    <div class="panel">
+      <h2>What the test changed</h2>
+      <div class="notes">
+        <ul>
+          <li><strong>Home</strong> &mdash; A&rsquo;s two equal doors kept; B&rsquo;s live task list replaces the static categories; nearby count shown once. The escrow line moved here, where it lands before the decision.</li>
+          <li><strong>Request a task</strong> &mdash; Version B as tested. Presets relabelled so they cannot read as a tip, which one respondent did.</li>
+          <li><strong>Review &amp; confirm</strong> &mdash; Version A unchanged: the verification order students said they check in.</li>
+          <li><strong>Find tasks</strong> &mdash; B&rsquo;s availability switch and sort chips on A&rsquo;s card hierarchy. <span class="flag">Untested combination</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Not built</h2>
+      <p>Chat, payment provider, push notifications and the dispute path are stubs &mdash; buttons acknowledge and stop. Nothing is saved, so a reload restarts the demo.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var SEED = [
+    { id: 'p1', title: 'Print & drop 30 slides', type: 'printing', from: 'Wartenweiler', to: 'FNB Bldg',
+      when: 'ASAP', offer: 15, walk: 5, age: 12, poster: 'Lerato M.', rating: '4.7' },
+    { id: 'p2', title: 'Buy lunch from the dining hall', type: 'food', from: 'Dining hall', to: 'Solomon',
+      when: 'ASAP', offer: 25, walk: 6, age: 4, poster: 'Sipho D.', rating: '5.0' },
+    { id: 'p3', title: 'Collect textbook from the library desk', type: 'other', from: 'Wartenweiler', to: 'Barnato Hall',
+      when: 'Today, 14:00', offer: 20, walk: 11, age: 26, poster: 'Naledi L.', rating: '4.6' }
+  ];
+
+  var TYPE_LABEL = { parcel: 'Parcel pickup', printing: 'Printing', food: 'Food', other: 'Other' };
+  var TYPICAL = { parcel: 'Most parcel tasks pay R20.', printing: 'Most printing tasks pay R15.',
+                  food: 'Most food runs pay R25.', other: 'Most quick errands pay R20.' };
+  var STEPS = ['accepted', 'onway', 'collected', 'delivered'];
+
+  var s = {};
+  function reset() {
+    s = {
+      screen: 'landing',
+      role: 'poster',
+      name: '', email: '', campus: 'Wits University • Braamfontein', verified: false,
+      draft: { type: 'parcel', title: '', from: 'Wits University • Matrix', to: '', when: 'asap', time: 'In 30 minutes', offer: 20 },
+      task: null,
+      available: true,
+      ftab: 'available',
+      sort: 'closest',
+      rating: 0,
+      released: false
+    };
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+  var rand = function () { return ''; };
+
+  /* ---------- navigation ---------- */
+  function go(name) {
+    s.screen = name;
+    var all = document.querySelectorAll('.screen');
+    for (var i = 0; i < all.length; i++) {
+      all[i].hidden = all[i].getAttribute('data-screen') !== name;
+    }
+    var live = document.querySelector('.screen[data-screen="' + name + '"]');
+    if (live) { var b = live.querySelector('.body'); if (b) b.scrollTop = 0; }
+    render();
+  }
+
+  var toastTimer = null;
+  function toast(msg) {
+    var el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2600);
+  }
+
+  /* ---------- time helpers ---------- */
+  function clockFor(step) {
+    if (!s.task || !s.task.stamps[step]) return '—';
+    return s.task.stamps[step];
+  }
+  function nowLabel() {
+    var d = new Date();
+    return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+
+  /* ---------- lists ---------- */
+  function openTasks() {
+    var list = SEED.slice();
+    if (s.task && s.task.status === 'posted') {
+      list.unshift({
+        id: 'mine', title: s.task.title, type: s.task.type, from: s.task.fromShort, to: s.task.toShort,
+        when: s.task.whenLabel, offer: s.task.offer, walk: 8, age: 0, poster: 'Thabo N.', rating: '4.9', mine: true
+      });
+    }
+    if (s.sort === 'pay') list.sort(function (a, b) { return b.offer - a.offer; });
+    else if (s.sort === 'new') list.sort(function (a, b) { return a.age - b.age; });
+    else list.sort(function (a, b) { return a.walk - b.walk; });
+    return list;
+  }
+
+  function walkSvg() {
+    return '<svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 12.4s3.9-3.5 3.9-6.4a3.9 3.9 0 10-7.8 0c0 2.9 3.9 6.4 3.9 6.4z" stroke="#8B9199" stroke-width="1.3" stroke-linejoin="round"/><circle cx="7" cy="6" r="1.3" stroke="#8B9199" stroke-width="1.3"/></svg>';
+  }
+  function verifiedPill() {
+    return '<span class="pill" style="padding:2px 8px;font-size:10.5px;"><svg width="9" height="9" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.3l2.2 2.2 4.8-5" stroke="#12A150" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Verified</span>';
+  }
+
+  /* A's card hierarchy (task first) with B's controls above the list */
+  function taskCard(t) {
+    return '<button class="listcard" data-task="' + t.id + '">' +
+      '<span class="grow col gap6">' +
+        '<span style="font-size:14.5px;font-weight:700;line-height:1.3;">' + esc(t.title) + '</span>' +
+        '<span class="fine">' + esc(t.from) + ' → ' + esc(t.to) + '</span>' +
+        '<span class="row" style="gap:7px;">' +
+          '<span class="avatar-sm"></span>' +
+          '<span class="fine">' + esc(t.poster) + ' ' + t.rating + '</span>' +
+          verifiedPill() +
+        '</span>' +
+      '</span>' +
+      '<span class="col gap6" style="align-items:flex-end;flex-shrink:0;">' +
+        '<span class="money">R ' + t.offer + '</span>' +
+        '<span class="row" style="gap:4px;">' + walkSvg() + '<span class="fine" style="font-weight:600;">' + t.walk + ' min</span></span>' +
+        (t.mine ? '<span class="fine" style="font-weight:700;color:var(--green-d);">Yours</span>' : '') +
+      '</span>' +
+    '</button>';
+  }
+
+  function homeRow(t) {
+    return '<button class="listcard" data-task="' + t.id + '" style="padding:12px 14px;align-items:center;">' +
+      '<span class="grow col gap4">' +
+        '<span style="font-size:14px;font-weight:700;">' + esc(t.title) + '</span>' +
+        '<span class="fine">' + esc(t.poster) + ' • verified • ' + t.walk + ' min walk</span>' +
+      '</span>' +
+      '<span class="money">R ' + t.offer + '</span>' +
+    '</button>';
+  }
+
+  function stepList(role) {
+    var labels = role === 'poster'
+      ? ['Task accepted', 'Student on the way', 'Parcel collected', 'Delivered to you']
+      : ['Task accepted', 'On my way', 'Parcel collected', 'Marked delivered'];
+    var reached = s.task ? STEPS.indexOf(s.task.status) : -1;
+    if (s.task && s.task.status === 'released') reached = 3;
+    var out = '<div class="col gap12">';
+    for (var i = 0; i < 4; i++) {
+      var on = i <= reached;
+      out += '<div class="between">' +
+        '<span class="row" style="gap:13px;">' +
+          '<span class="dot' + (on ? ' on' : '') + '"></span>' +
+          '<span style="font-size:14.5px;font-weight:' + (on ? '600' : '500') + ';color:' + (on ? 'var(--ink)' : 'var(--ink-2)') + ';">' + labels[i] + '</span>' +
+        '</span>' +
+        '<span class="fine" style="font-weight:600;">' + clockFor(STEPS[i]) + '</span>' +
+      '</div>';
+    }
+    return out + '</div>';
+  }
+
+  var MENU = ['My skills & rates', 'Payout account (PayShap)', 'Task history', 'Report a problem', 'Log out'];
+
+  /* ---------- render ---------- */
+  function render() {
+    var d = s.draft;
+    var offer = d.offer;
+
+    /* signup */
+    var emailOk = /^[^\s@]+@[^\s@]+\.ac\.za$/i.test(s.email);
+    var nameOk = s.name.trim().length > 1;
+    if ($('su-submit')) $('su-submit').disabled = !(emailOk && nameOk);
+    if ($('vf-email')) $('vf-email').textContent = s.email || 'Your university email';
+
+    /* request */
+    var tiles = document.querySelectorAll('#rq-types .tile');
+    for (var i = 0; i < tiles.length; i++) {
+      tiles[i].setAttribute('aria-pressed', tiles[i].getAttribute('data-type') === d.type ? 'true' : 'false');
+    }
+    var whens = document.querySelectorAll('#rq-when .seg');
+    for (i = 0; i < whens.length; i++) {
+      whens[i].setAttribute('aria-pressed', whens[i].getAttribute('data-when') === d.when ? 'true' : 'false');
+    }
+    $('rq-time').hidden = d.when !== 'later';
+    var chips = document.querySelectorAll('#rq-offer .chip');
+    var isPreset = [15, 20, 25, 30].indexOf(offer) > -1 && !d.customOpen;
+    for (i = 0; i < chips.length; i++) {
+      var v = chips[i].getAttribute('data-offer');
+      var active = v === 'custom' ? !isPreset : (isPreset && Number(v) === offer);
+      chips[i].setAttribute('aria-pressed', active ? 'true' : 'false');
+    }
+    $('rq-custom').hidden = isPreset;
+    $('rq-typical').innerHTML = 'TaskIt adds no fee on micro-tasks &mdash; the student receives the full R' + offer + '. ' + TYPICAL[d.type];
+
+    /* review */
+    var whenLabel = d.when === 'asap' ? 'ASAP' : d.time;
+    if ($('rv-title')) {
+      $('rv-type').textContent = TYPE_LABEL[d.type];
+      $('rv-title').textContent = d.title || 'Your task';
+      $('rv-from').textContent = d.from.replace('Wits University', 'Wits');
+      $('rv-to').textContent = d.to || '—';
+      $('rv-when').textContent = whenLabel;
+      $('rv-offer').textContent = 'R ' + offer + '.00';
+      $('rv-total').textContent = 'R ' + offer + '.00';
+      $('rv-hold').textContent = 'R' + offer;
+      $('rv-btn-amt').textContent = 'R' + offer;
+    }
+
+    /* home */
+    if ($('hm-campus')) $('hm-campus').textContent = s.campus;
+    if ($('hm-list')) {
+      var near = openTasks().filter(function (t) { return !t.mine; }).slice(0, 3);
+      $('hm-list').innerHTML = near.map(homeRow).join('');
+    }
+    if ($('hm-activity')) {
+      var a = '';
+      if (!s.task) {
+        a = '<div class="card-grey"><div class="col gap6"><span style="font-size:15px;font-weight:700;">No active tasks</span>' +
+            '<span class="fine">Post a task and TaskIt will match you with a verified student.</span></div></div>';
+      } else {
+        a = '<button class="listcard" data-go-screen="' + activityScreen() + '" style="align-items:center;">' +
+            '<span class="grow col gap4"><span style="font-size:14.5px;font-weight:700;">' + esc(s.task.title) + '</span>' +
+            '<span class="fine">' + statusLine() + '</span></span>' +
+            '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3.5L10.5 8L6 12.5" stroke="#C2C7CD" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
+      }
+      $('hm-activity').innerHTML = a;
+    }
+
+    /* posted */
+    if (s.task && $('po-title')) {
+      $('po-type').textContent = TYPE_LABEL[s.task.type];
+      $('po-title').textContent = s.task.title;
+      $('po-route').textContent = s.task.fromShort + ' → ' + s.task.toShort + ' • ' + s.task.whenLabel;
+      $('po-amt').textContent = 'R' + s.task.offer;
+    }
+
+    /* find */
+    if ($('fd-list')) {
+      $('fd-switch').setAttribute('aria-checked', s.available ? 'true' : 'false');
+      $('pf-switch').setAttribute('aria-checked', s.available ? 'true' : 'false');
+      $('fd-dot').style.background = s.available ? 'var(--green)' : '#CBD0D6';
+      var list = openTasks();
+      $('fd-availsub').textContent = s.available
+        ? list.length + ' nearby • switch off to mute alerts'
+        : 'Off • you will not get task alerts';
+      $('pf-availsub').textContent = s.available ? 'On – you will get task alerts' : 'Off – no task alerts';
+      $('pf-availsub').style.color = s.available ? 'var(--green-d)' : 'var(--ink-2)';
+
+      var ft = document.querySelectorAll('#fd-tabs .chip');
+      for (i = 0; i < ft.length; i++) {
+        var on = ft[i].getAttribute('data-ftab') === s.ftab;
+        ft[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+        ft[i].style.background = on ? '#fff' : 'transparent';
+        ft[i].style.color = on ? 'var(--ink)' : 'var(--ink-2)';
+      }
+      var sc = document.querySelectorAll('#fd-sort .chip');
+      for (i = 0; i < sc.length; i++) {
+        sc[i].setAttribute('aria-pressed', sc[i].getAttribute('data-sort') === s.sort ? 'true' : 'false');
+      }
+      $('fd-sort').style.display = s.ftab === 'available' ? '' : 'none';
+
+      var html = '';
+      if (!s.available) {
+        html = '<div class="card-grey" style="text-align:center;padding:26px 18px;">' +
+          '<div class="col gap6"><span style="font-size:15px;font-weight:700;">You are unavailable</span>' +
+          '<span class="fine">Nearby tasks are hidden and alerts are muted. Switch back on when your lecture is done.</span></div></div>';
+      } else if (s.ftab === 'available') {
+        var open = list.filter(function (t) { return t.id !== 'mine' || (s.task && s.task.status === 'posted'); });
+        html = open.map(taskCard).join('');
+      } else if (s.ftab === 'accepted') {
+        if (s.task && ['accepted', 'onway', 'collected', 'delivered'].indexOf(s.task.status) > -1) {
+          html = '<button class="listcard" data-go-screen="working" style="align-items:center;">' +
+            '<span class="grow col gap4"><span style="font-size:14.5px;font-weight:700;">' + esc(s.task.title) + '</span>' +
+            '<span class="fine">' + statusLine() + '</span></span><span class="money">R ' + s.task.offer + '</span></button>';
+        } else {
+          html = '<div class="card-grey"><span class="fine">Nothing accepted right now.</span></div>';
+        }
+      } else {
+        if (s.task && s.task.status === 'released') {
+          html = '<div class="card"><div class="between"><span class="col gap4">' +
+            '<span style="font-size:14.5px;font-weight:700;">' + esc(s.task.title) + '</span>' +
+            '<span class="fine">Paid • rated ' + (s.rating || '–') + '</span></span>' +
+            '<span class="money">R ' + s.task.offer + '</span></div></div>';
+        } else {
+          html = '<div class="card-grey"><span class="fine">No completed tasks yet in this demo.</span></div>';
+        }
+      }
+      $('fd-list').innerHTML = html;
+    }
+
+    /* detail */
+    if (s.detail && $('dt-title')) {
+      var t = s.detail;
+      $('dt-type').textContent = TYPE_LABEL[t.type];
+      $('dt-title').textContent = t.title;
+      $('dt-poster').textContent = t.poster;
+      $('dt-postermeta').textContent = t.rating + ' · ' + (t.mine ? '12 tasks posted' : '8 tasks posted');
+      $('dt-from').textContent = t.from;
+      $('dt-to').textContent = t.to;
+      $('dt-when').textContent = t.when + (t.when === 'ASAP' ? ' · today' : '');
+      $('dt-walk').textContent = t.walk + ' min walk';
+      $('dt-amt').textContent = 'R' + t.offer;
+      $('dt-accept').disabled = !t.mine && false;
+    }
+
+    /* working (earner) */
+    if (s.task && $('wk-steps')) {
+      $('wk-title').textContent = s.task.title;
+      $('wk-amt').textContent = 'R' + s.task.offer;
+      $('wk-steps').innerHTML = stepList('earner');
+      var btn = $('wk-advance');
+      var st = s.task.status;
+      if (st === 'accepted') { btn.textContent = "I'm on my way"; btn.disabled = false; }
+      else if (st === 'onway') { btn.textContent = 'Mark parcel collected'; btn.disabled = false; }
+      else if (st === 'collected') { btn.textContent = 'Mark as delivered'; btn.disabled = false; }
+      else if (st === 'delivered') { btn.textContent = 'Waiting for Thabo to release R' + s.task.offer; btn.disabled = true; }
+      else { btn.textContent = 'Paid — R' + s.task.offer + ' released'; btn.disabled = true; }
+      $('wk-money').textContent = st === 'delivered'
+        ? 'Thabo has been notified. The hold is released the moment he confirms.'
+        : 'Released to your payout account the moment Thabo confirms delivery.';
+    }
+
+    /* tracking (poster) */
+    if (s.task && $('tk-steps')) {
+      $('tk-title').textContent = s.task.title;
+      $('tk-amt').textContent = 'R' + s.task.offer;
+      $('tk-btn-amt').textContent = 'R' + s.task.offer;
+      $('tk-steps').innerHTML = stepList('poster');
+      var ready = s.task.status === 'delivered';
+      $('tk-release').disabled = !ready;
+      $('tk-hint').hidden = ready;
+    }
+
+    /* released */
+    if (s.task && $('rl-amt')) {
+      $('rl-amt').textContent = 'R' + s.task.offer + '.00';
+      var st2 = '';
+      for (i = 1; i <= 5; i++) {
+        var filled = i <= s.rating;
+        st2 += '<button class="star" data-star="' + i + '" aria-label="' + i + ' star' + (i > 1 ? 's' : '') + '">' +
+          '<svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M12 2.6l3.1 6.3 6.9.9-5 4.8 1.2 6.8L12 18.1 5.8 21.4 7 14.6l-5-4.8 6.9-.9L12 2.6z" fill="' +
+          (filled ? '#17C964' : '#DFE2E6') + '"/></svg></button>';
+      }
+      $('rl-stars').innerHTML = st2;
+      $('rl-submit').disabled = s.rating === 0;
+    }
+
+    /* activity */
+    if ($('ac-body')) {
+      if (!s.task) {
+        $('ac-body').innerHTML = '<div class="card-grey"><div class="col gap6"><span style="font-size:15px;font-weight:700;">Nothing here yet</span>' +
+          '<span class="fine">Post a task or accept one and it will show up here.</span></div></div>';
+      } else {
+        $('ac-body').innerHTML = '<button class="listcard" data-go-screen="' + activityScreen() + '" style="align-items:center;">' +
+          '<span class="grow col gap4"><span style="font-size:15px;font-weight:700;">' + esc(s.task.title) + '</span>' +
+          '<span class="fine">' + statusLine() + '</span></span>' +
+          '<span class="col" style="align-items:flex-end;gap:4px;"><span class="money">R ' + s.task.offer + '</span>' +
+          '<span class="fine">' + (s.task.status === 'released' ? 'Released' : 'Held') + '</span></span></button>';
+      }
+    }
+
+    /* profile */
+    if ($('pf-name')) {
+      var poster = s.role === 'poster';
+      $('pf-name').textContent = poster ? (s.name.trim() || 'Thabo Nkosi') : 'Mbali Khumalo';
+      $('pf-meta').textContent = poster ? '4.9 · 12 tasks posted' : '4.8 · 34 tasks completed';
+      $('pf-verified').textContent = (s.verified || !poster) ? 'Wits email verified' : 'Verification pending';
+      if (poster) {
+        /* a poster's money moves the other way: spent, and currently held */
+        var spent = (s.task && s.task.status === 'released') ? s.task.offer : 0;
+        var held = (s.task && s.task.status !== 'released') ? s.task.offer : 0;
+        $('pf-earned').textContent = 'R ' + spent;
+        $('pf-pending').textContent = 'R ' + held;
+        $('pf-earned').nextElementSibling.textContent = 'Spent this month';
+        $('pf-pending').nextElementSibling.textContent = 'Held on your tasks';
+      } else {
+        var earned = 780, pending = 40;
+        if (s.task) {
+          if (s.task.status === 'released') earned += s.task.offer;
+          else if (s.task.status !== 'posted') pending += s.task.offer;
+        }
+        $('pf-earned').textContent = 'R ' + earned;
+        $('pf-pending').textContent = 'R ' + pending;
+        $('pf-earned').nextElementSibling.textContent = 'Earned this month';
+        $('pf-pending').nextElementSibling.textContent = 'Pending release';
+      }
+      $('pf-menu').innerHTML = MENU.map(function (m, idx) {
+        return '<button class="back" data-stub="' + esc(m) + '" style="width:100%;padding:16px;justify-content:space-between;' +
+          (idx ? 'border-top:1px solid var(--rule);' : '') + '">' +
+          '<span style="font-size:14.5px;font-weight:600;color:' + (m === 'Log out' ? 'var(--ink-2)' : 'var(--ink)') + ';">' + esc(m) + '</span>' +
+          '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3.5L10.5 8L6 12.5" stroke="#C2C7CD" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
+      }).join('');
+    }
+
+    /* tab bars */
+    var bars = document.querySelectorAll('.tabbar');
+    for (i = 0; i < bars.length; i++) {
+      var current = bars[i].getAttribute('data-tabs');
+      bars[i].innerHTML = ['home', 'tasks', 'activity', 'profile'].map(function (k) {
+        var label = k.charAt(0).toUpperCase() + k.slice(1);
+        return '<button class="tab" data-tab="' + k + '"' + (k === current ? ' aria-current="page"' : '') + '><s></s><span>' + label + '</span></button>';
+      }).join('');
+    }
+
+    /* presenter */
+    $('as-poster').setAttribute('aria-pressed', s.role === 'poster' ? 'true' : 'false');
+    $('as-earner').setAttribute('aria-pressed', s.role === 'earner' ? 'true' : 'false');
+  }
+
+  function statusLine() {
+    if (!s.task) return '';
+    var m = {
+      posted: 'Posted • R' + s.task.offer + ' held, waiting for a student',
+      accepted: 'Mbali K. accepted • R' + s.task.offer + ' held',
+      onway: 'Student on the way • R' + s.task.offer + ' held',
+      collected: 'Parcel collected • R' + s.task.offer + ' held',
+      delivered: 'Delivered • waiting for you to release R' + s.task.offer,
+      released: 'Completed • R' + s.task.offer + ' released'
+    };
+    return m[s.task.status] || '';
+  }
+
+  function activityScreen() {
+    if (!s.task) return 'activity';
+    if (s.role === 'poster') {
+      if (s.task.status === 'posted') return 'posted';
+      if (s.task.status === 'released') return 'activity';
+      return 'tracking';
+    }
+    if (s.task.status === 'posted') return 'find';
+    return 'working';
+  }
+
+  /* ---------- wiring ---------- */
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest ? e.target.closest('[data-go],[data-go-screen],[data-tab],[data-task],[data-type],[data-when],[data-offer],[data-sort],[data-ftab],[data-star],[data-stub]') : null;
+    if (!el) return;
+
+    var v;
+    if ((v = el.getAttribute('data-go'))) { go(v); return; }
+    if ((v = el.getAttribute('data-go-screen'))) { go(v); return; }
+
+    if ((v = el.getAttribute('data-tab'))) {
+      if (v === 'home') go('home');
+      else if (v === 'tasks') go(s.role === 'earner' ? 'find' : (s.task ? activityScreen() : 'find'));
+      else if (v === 'activity') go(s.task ? 'activity' : 'activity');
+      else go('profile');
+      return;
+    }
+
+    if ((v = el.getAttribute('data-task'))) {
+      var all = openTasks();
+      for (var i = 0; i < all.length; i++) {
+        if (all[i].id === v) { s.detail = all[i]; break; }
+      }
+      if (s.role === 'poster' && s.detail && s.detail.mine) { go('posted'); return; }
+      go('detail');
+      return;
+    }
+
+    if ((v = el.getAttribute('data-type'))) { s.draft.type = v; render(); return; }
+    if ((v = el.getAttribute('data-when'))) { s.draft.when = v; render(); return; }
+    if ((v = el.getAttribute('data-offer'))) {
+      if (v === 'custom') { s.draft.customOpen = true; s.draft.offer = Number($('rq-custom').value) || 20; render(); $('rq-custom').focus(); }
+      else { s.draft.customOpen = false; s.draft.offer = Number(v); render(); }
+      return;
+    }
+    if ((v = el.getAttribute('data-sort'))) { s.sort = v; render(); return; }
+    if ((v = el.getAttribute('data-ftab'))) { s.ftab = v; render(); return; }
+    if ((v = el.getAttribute('data-star'))) { s.rating = Number(v); render(); return; }
+    if ((v = el.getAttribute('data-stub'))) { toast(v + ' is not built in this prototype.'); return; }
+  });
+
+  /* pay segmented control */
+  document.querySelectorAll('#rv-pay .seg').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('#rv-pay .seg').forEach(function (o) { o.setAttribute('aria-pressed', 'false'); });
+      b.setAttribute('aria-pressed', 'true');
+    });
+  });
+
+  /* signup inputs */
+  $('su-name').addEventListener('input', function () { s.name = this.value; render(); });
+  $('su-email').addEventListener('input', function () {
+    s.email = this.value;
+    var ok = this.value === '' || /^[^\s@]+@[^\s@]+\.ac\.za$/i.test(this.value);
+    this.classList.toggle('field-err', !ok);
+    $('su-hint').textContent = ok
+      ? 'We verify every account against a university email address. This is how other students know you are real.'
+      : 'That is not a university address. It must end in .ac.za — try yourname@students.wits.ac.za';
+    $('su-hint').style.color = ok ? 'var(--ink-2)' : '#C62A2F';
+    render();
+  });
+  $('su-campus').addEventListener('change', function () { s.campus = this.value; render(); });
+  $('su-submit').addEventListener('click', function () { s.verified = true; go('verify'); });
+
+  /* request inputs */
+  $('rq-title').addEventListener('input', function () {
+    s.draft.title = this.value;
+    if (this.value.trim()) { this.classList.remove('field-err'); $('rq-title-err').hidden = true; }
+  });
+  $('rq-from').addEventListener('change', function () { s.draft.from = this.value; });
+  $('rq-to').addEventListener('change', function () {
+    s.draft.to = this.value;
+    this.classList.remove('field-err'); $('rq-to-err').hidden = true;
+  });
+  $('rq-time').addEventListener('change', function () { s.draft.time = this.value; render(); });
+  $('rq-custom').addEventListener('input', function () {
+    var n = Number(this.value);
+    if (n > 0) { s.draft.offer = n; $('rq-typical').innerHTML = 'TaskIt adds no fee on micro-tasks &mdash; the student receives the full R' + n + '. ' + TYPICAL[s.draft.type]; }
+  });
+
+  $('rq-next').addEventListener('click', function () {
+    var bad = false;
+    if (!s.draft.title.trim()) { $('rq-title').classList.add('field-err'); $('rq-title-err').hidden = false; bad = true; }
+    if (!s.draft.to) { $('rq-to').classList.add('field-err'); $('rq-to-err').hidden = false; bad = true; }
+    if (bad) { toast('Fill in the highlighted fields.'); return; }
+    go('review');
+  });
+
+  /* post the task */
+  $('rv-post').addEventListener('click', function () {
+    var d = s.draft;
+    var shortFrom = d.from.replace('Wits University • ', '').replace('Braamfontein • ', '');
+    var shortTo = d.to.replace('Wits • ', '');
+    s.task = {
+      title: d.title || 'Your task',
+      type: d.type,
+      from: d.from.replace('Wits University', 'Wits'),
+      to: d.to,
+      fromShort: shortFrom,
+      toShort: shortTo,
+      whenLabel: d.when === 'asap' ? 'ASAP' : d.time,
+      offer: d.offer,
+      status: 'posted',
+      stamps: {}
+    };
+    s.rating = 0;
+    go('posted');
+    toast('R' + s.task.offer + ' held by TaskIt. Nobody has been paid yet.');
+  });
+
+  /* accept */
+  $('dt-accept').addEventListener('click', function () {
+    if (!s.detail) return;
+    if (!s.detail.mine) { toast('In the demo, only the task you posted can be followed end to end.'); return; }
+    s.task.status = 'accepted';
+    s.task.stamps.accepted = nowLabel();
+    s.role = 'earner';
+    go('working');
+    toast('Task accepted. R' + s.task.offer + ' is held for you.');
+  });
+
+  /* earner advances */
+  $('wk-advance').addEventListener('click', function () {
+    var st = s.task.status;
+    var next = st === 'accepted' ? 'onway' : st === 'onway' ? 'collected' : st === 'collected' ? 'delivered' : null;
+    if (!next) return;
+    s.task.status = next;
+    s.task.stamps[next] = nowLabel();
+    render();
+    if (next === 'delivered') toast('Thabo has been asked to confirm and release R' + s.task.offer + '.');
+  });
+
+  /* poster releases */
+  $('tk-release').addEventListener('click', function () {
+    s.task.status = 'released';
+    s.task.stamps.released = nowLabel();
+    s.released = true;
+    go('released');
+  });
+
+  $('rl-submit').addEventListener('click', function () {
+    go('home');
+    toast('Thanks — ' + s.rating + ' stars sent to Mbali.');
+  });
+  $('rl-skip').addEventListener('click', function () { go('home'); });
+
+  /* switches */
+  function toggleAvail() { s.available = !s.available; render(); toast(s.available ? 'You are available again.' : 'Alerts muted. You are hidden from new tasks.'); }
+  $('fd-switch').addEventListener('click', toggleAvail);
+  $('pf-switch').addEventListener('click', toggleAvail);
+  $('wk-chat').addEventListener('click', function () { toast('In-app chat is not built in this prototype.'); });
+  $('tk-chat').addEventListener('click', function () { toast('In-app chat is not built in this prototype.'); });
+
+  /* presenter */
+  $('as-poster').addEventListener('click', function () {
+    s.role = 'poster';
+    go(s.task ? activityScreen() : 'home');
+  });
+  $('as-earner').addEventListener('click', function () {
+    s.role = 'earner';
+    if (!s.task) { go('find'); toast('Post a task as Thabo first, then it appears here.'); return; }
+    go(activityScreen());
+  });
+  $('as-reset').addEventListener('click', function () {
+    reset();
+    $('su-name').value = ''; $('su-email').value = ''; $('su-pass').value = '';
+    $('rq-title').value = ''; $('rq-to').value = ''; $('rq-custom').value = '';
+    $('su-email').classList.remove('field-err');
+    $('rq-title').classList.remove('field-err'); $('rq-to').classList.remove('field-err');
+    $('rq-title-err').hidden = true; $('rq-to-err').hidden = true;
+    go('landing');
+  });
+
+  reset();
+  go('landing');
+})();
+</script>
+</body>
+</html>
