@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="TaskIt clickable prototype - a campus task marketplace, one task followed from both sides. INFO4011A Group 3, Wits University.">
+<meta name="description" content="TaskIt clickable prototype: a campus task marketplace, one task followed from both sides. INFO4011A Group 3, Wits University.">
 <meta name="theme-color" content="#0E1014">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2315171C'/%3E%3Ctext y='68' x='50' text-anchor='middle' font-size='54' font-weight='800' font-family='system-ui,sans-serif' fill='%2317C964'%3ER%3C/text%3E%3C/svg%3E">
 <style>
@@ -84,8 +84,8 @@
 
   .app {
     display: grid;
-    grid-template-columns: 390px minmax(260px, 360px);
-    gap: 44px;
+    grid-template-columns: 390px 244px;
+    gap: 34px;
     justify-content: center;
     align-items: start;
     padding-inline: 20px;
@@ -174,6 +174,7 @@
     background-repeat: no-repeat; background-position: right 15px center; padding-right: 40px; }
   select.field:invalid { color: var(--ink-3); font-weight: 500; }
   .field-err { box-shadow: inset 0 0 0 1.6px #E5484D; }
+  .field-err:focus-visible { outline-color: #C62A2F; }
   .err { font-size: 12px; font-weight: 600; color: #C62A2F; margin: 0; }
 
   .seg-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -243,22 +244,12 @@
   .panel { background: var(--page-2); border: 1px solid var(--page-rule); border-radius: 12px; padding: 18px; }
   .panel h2 { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
     color: var(--page-ink-3); margin: 0 0 12px; }
-  .panel p { font-size: 0.86rem; line-height: 1.55; color: var(--page-ink-2); margin: 0; }
-  .panel p + p { margin-top: 10px; }
-  .panel b { color: var(--page-ink); font-weight: 600; }
   .who { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .ctrl { padding: 11px 12px; border-radius: 9px; border: 1px solid var(--page-rule);
     background: transparent; color: var(--page-ink-2); font-family: inherit; font-size: 0.82rem;
     font-weight: 600; cursor: pointer; text-align: center; line-height: 1.3; }
   .ctrl[aria-pressed="true"] { background: var(--page-ink); color: var(--page); border-color: var(--page-ink); }
   .ctrl-wide { grid-column: 1 / -1; }
-  .notes { font-size: 0.86rem; line-height: 1.55; color: var(--page-ink-2); }
-  .notes ul { margin: 0; padding-left: 18px; }
-  .notes li { margin-bottom: 8px; }
-  .notes li::marker { color: var(--page-ink-3); }
-  .notes strong { color: var(--page-ink); font-weight: 600; }
-  .flag { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: .05em;
-    text-transform: uppercase; color: var(--page-accent); }
 </style>
 
 <div class="app">
@@ -271,7 +262,7 @@
         <div class="body" style="background:#0E1014;display:flex;flex-direction:column;justify-content:center;">
           <div class="h1" style="color:#fff;">Task it.</div>
           <div style="font-size:31px;font-weight:800;letter-spacing:-0.8px;line-height:1.14;color:#17C964;margin-top:14px;">Your campus.<br>Your tasks.<br>Your money.</div>
-          <p class="sub" style="color:#8A9199;margin-top:18px;">Get small campus tasks done by verified students &mdash; or earn between lectures.</p>
+          <p class="sub" style="color:#8A9199;margin-top:18px;">Get small campus tasks done by verified students, or earn between lectures.</p>
         </div>
         <div class="foot" style="background:#0E1014;">
           <div class="col gap12">
@@ -298,7 +289,7 @@
 
           <div class="col gap9 mt20">
             <label class="lab" for="su-email">University email</label>
-            <input class="field" id="su-email" type="email" placeholder="thabo@students.wits.ac.za" autocomplete="email" inputmode="email">
+            <input class="field" id="su-email" type="email" placeholder="thabonkosi@students.wits.ac.za" autocomplete="email" inputmode="email">
             <p class="fine" id="su-hint">We verify every account against a university email address. This is how other students know you are real.</p>
           </div>
 
@@ -489,7 +480,7 @@
             <button class="chip" data-offer="custom" aria-pressed="false">Other</button>
           </div>
           <input class="field mt12" id="rq-custom" type="number" min="5" max="500" step="5" placeholder="Enter an amount in rand" hidden>
-          <p class="fine mt8" id="rq-typical">TaskIt adds no fee on micro-tasks &mdash; the student receives the full R20. Most parcel tasks pay R20.</p>
+          <p class="fine mt8" id="rq-typical">TaskIt adds no fee on micro-tasks, so the student receives the full R20. Most parcel tasks pay R20.</p>
           <div class="spacer"></div>
         </div>
         <div class="foot">
@@ -544,7 +535,7 @@
           <div class="spacer"></div>
         </div>
         <div class="foot">
-          <button class="btn btn-dark" id="rv-post">Hold <span id="rv-btn-amt">R20</span> &amp; post task</button>
+          <button class="btn btn-dark" id="rv-post">Post task</button>
         </div>
       </section>
 
@@ -733,7 +724,7 @@
         </div>
         <div class="foot">
           <div class="col gap12">
-            <button class="btn btn-dark" id="tk-release">Confirm delivery &amp; release <span id="tk-btn-amt">R20</span></button>
+            <button class="btn btn-dark" id="tk-release">Confirm delivery &amp; release R20</button>
             <p class="fine" id="tk-hint" style="text-align:center;">Available once Mbali marks the parcel delivered.</p>
           </div>
         </div>
@@ -794,7 +785,7 @@
             <div class="row" style="gap:14px;">
               <div class="grow col gap4">
                 <span style="font-size:15px;font-weight:700;">Available for tasks</span>
-                <span class="fine" id="pf-availsub" style="color:var(--green-d);font-weight:600;">On &ndash; you will get task alerts</span>
+                <span class="fine" id="pf-availsub" style="color:var(--green-d);font-weight:600;">On: you will get task alerts</span>
               </div>
               <button class="sw" id="pf-switch" role="switch" aria-checked="true" aria-label="Available for tasks"><i></i></button>
             </div>
@@ -832,24 +823,6 @@
         <button class="ctrl" id="as-earner" aria-pressed="false">Mbali K.<br><span style="font-weight:500;opacity:.75;">the earner</span></button>
         <button class="ctrl ctrl-wide" id="as-reset">Restart the demo</button>
       </div>
-      <p style="margin-top:12px;">One account both posts and completes tasks, so this switch stands in for handing the phone to the other student. The task you post appears in Mbali&rsquo;s list with the details you typed.</p>
-    </div>
-
-    <div class="panel">
-      <h2>What the test changed</h2>
-      <div class="notes">
-        <ul>
-          <li><strong>Home</strong> &mdash; A&rsquo;s two equal doors kept; B&rsquo;s live task list replaces the static categories; nearby count shown once. The escrow line moved here, where it lands before the decision.</li>
-          <li><strong>Request a task</strong> &mdash; Version B as tested. Presets relabelled so they cannot read as a tip, which one respondent did.</li>
-          <li><strong>Review &amp; confirm</strong> &mdash; Version A unchanged: the verification order students said they check in.</li>
-          <li><strong>Find tasks</strong> &mdash; B&rsquo;s availability switch and sort chips on A&rsquo;s card hierarchy. <span class="flag">Untested combination</span></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h2>Not built</h2>
-      <p>Chat, payment provider, push notifications and the dispute path are stubs &mdash; buttons acknowledge and stop. Nothing is saved, so a reload restarts the demo.</p>
     </div>
   </div>
 </div>
@@ -915,7 +888,7 @@
 
   /* ---------- time helpers ---------- */
   function clockFor(step) {
-    if (!s.task || !s.task.stamps[step]) return '—';
+    if (!s.task || !s.task.stamps[step]) return '';
     return s.task.stamps[step];
   }
   function nowLabel() {
@@ -1026,7 +999,7 @@
       chips[i].setAttribute('aria-pressed', active ? 'true' : 'false');
     }
     $('rq-custom').hidden = isPreset;
-    $('rq-typical').innerHTML = 'TaskIt adds no fee on micro-tasks &mdash; the student receives the full R' + offer + '. ' + TYPICAL[d.type];
+    $('rq-typical').innerHTML = 'TaskIt adds no fee on micro-tasks, so the student receives the full R' + offer + '. ' + TYPICAL[d.type];
 
     /* review */
     var whenLabel = d.when === 'asap' ? 'ASAP' : d.time;
@@ -1034,12 +1007,11 @@
       $('rv-type').textContent = TYPE_LABEL[d.type];
       $('rv-title').textContent = d.title || 'Your task';
       $('rv-from').textContent = d.from.replace('Wits University', 'Wits');
-      $('rv-to').textContent = d.to || '—';
+      $('rv-to').textContent = d.to || 'Not set';
       $('rv-when').textContent = whenLabel;
       $('rv-offer').textContent = 'R ' + offer + '.00';
       $('rv-total').textContent = 'R ' + offer + '.00';
       $('rv-hold').textContent = 'R' + offer;
-      $('rv-btn-amt').textContent = 'R' + offer;
     }
 
     /* home */
@@ -1079,7 +1051,7 @@
       $('fd-availsub').textContent = s.available
         ? list.length + ' nearby • switch off to mute alerts'
         : 'Off • you will not get task alerts';
-      $('pf-availsub').textContent = s.available ? 'On – you will get task alerts' : 'Off – no task alerts';
+      $('pf-availsub').textContent = s.available ? 'On: you will get task alerts' : 'Off: no task alerts';
       $('pf-availsub').style.color = s.available ? 'var(--green-d)' : 'var(--ink-2)';
 
       var ft = document.querySelectorAll('#fd-tabs .chip');
@@ -1115,7 +1087,7 @@
         if (s.task && s.task.status === 'released') {
           html = '<div class="card"><div class="between"><span class="col gap4">' +
             '<span style="font-size:14.5px;font-weight:700;">' + esc(s.task.title) + '</span>' +
-            '<span class="fine">Paid • rated ' + (s.rating || '–') + '</span></span>' +
+            '<span class="fine">Paid • ' + (s.rating ? 'rated ' + s.rating : 'not rated') + '</span></span>' +
             '<span class="money">R ' + s.task.offer + '</span></div></div>';
         } else {
           html = '<div class="card-grey"><span class="fine">No completed tasks yet in this demo.</span></div>';
@@ -1150,7 +1122,7 @@
       else if (st === 'onway') { btn.textContent = 'Mark parcel collected'; btn.disabled = false; }
       else if (st === 'collected') { btn.textContent = 'Mark as delivered'; btn.disabled = false; }
       else if (st === 'delivered') { btn.textContent = 'Waiting for Thabo to release R' + s.task.offer; btn.disabled = true; }
-      else { btn.textContent = 'Paid — R' + s.task.offer + ' released'; btn.disabled = true; }
+      else { btn.textContent = 'Paid: R' + s.task.offer + ' released'; btn.disabled = true; }
       $('wk-money').textContent = st === 'delivered'
         ? 'Thabo has been notified. The hold is released the moment he confirms.'
         : 'Released to your payout account the moment Thabo confirms delivery.';
@@ -1160,7 +1132,7 @@
     if (s.task && $('tk-steps')) {
       $('tk-title').textContent = s.task.title;
       $('tk-amt').textContent = 'R' + s.task.offer;
-      $('tk-btn-amt').textContent = 'R' + s.task.offer;
+      $('tk-release').textContent = 'Confirm delivery & release R' + s.task.offer;
       $('tk-steps').innerHTML = stepList('poster');
       var ready = s.task.status === 'delivered';
       $('tk-release').disabled = !ready;
@@ -1323,7 +1295,7 @@
     this.classList.toggle('field-err', !ok);
     $('su-hint').textContent = ok
       ? 'We verify every account against a university email address. This is how other students know you are real.'
-      : 'That is not a university address. It must end in .ac.za — try yourname@students.wits.ac.za';
+      : 'That is not a university address. It must end in .ac.za. Try thabonkosi@students.wits.ac.za';
     $('su-hint').style.color = ok ? 'var(--ink-2)' : '#C62A2F';
     render();
   });
@@ -1343,7 +1315,7 @@
   $('rq-time').addEventListener('change', function () { s.draft.time = this.value; render(); });
   $('rq-custom').addEventListener('input', function () {
     var n = Number(this.value);
-    if (n > 0) { s.draft.offer = n; $('rq-typical').innerHTML = 'TaskIt adds no fee on micro-tasks &mdash; the student receives the full R' + n + '. ' + TYPICAL[s.draft.type]; }
+    if (n > 0) { s.draft.offer = n; $('rq-typical').innerHTML = 'TaskIt adds no fee on micro-tasks, so the student receives the full R' + n + '. ' + TYPICAL[s.draft.type]; }
   });
 
   $('rq-next').addEventListener('click', function () {
@@ -1408,7 +1380,7 @@
 
   $('rl-submit').addEventListener('click', function () {
     go('home');
-    toast('Thanks — ' + s.rating + ' stars sent to Mbali.');
+    toast('Thanks, ' + s.rating + ' stars sent to Mbali.');
   });
   $('rl-skip').addEventListener('click', function () { go('home'); });
 
